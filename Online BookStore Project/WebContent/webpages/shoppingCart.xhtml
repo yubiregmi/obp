@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:outputStylesheet library="css" name="common.css" />
+<!-- include header and footer from templates -->
+
+
+
+<ui:composition template="/WEB-INF/templates/headerFooterTemplate.xhtml">
+
+	<ui:define name="title">Shopping Cart</ui:define>
+
+	<ui:define name="content">
+
+
+		<section>
+			<h:head>
+				<div style="padding-left: 80%; color: red;">
+					<h:form id="headerId">
+						<b>Welcome:</b>
+						<h:commandLink id="userAccountLink" action="#{userAccountController.showDetails}">user</h:commandLink>
+					</h:form>
+					<!-- 	<h:outputLink value ="#" style = "text-decoration: none;">&#160;LogOut</h:outputLink> -->
+				</div>
+			</h:head>
+		</section>
+
+		<!-- include navigation template -->
+
+		<ui:include src="/WEB-INF/templates/navigation.xhtml"></ui:include>
+
+		<br />
+
+		<h:body>
+			<p:layout fullPage="false">
+
+				<p:layoutUnit position="north" style="border: none;">
+					<h:outputText value="This is place for search options" />
+
+					<h:form id="searchForm" styleClass="searchForm">
+						<h:panelGrid columns="5">
+							<h:outputLabel value="Search Category" />
+							<h:selectOneMenu disabled="true">
+								<f:selectItem itemLabel="All" itemValue="All" />
+								<f:selectItem itemLabel="Java" itemValue="Java" />
+								<f:selectItem itemLabel="C-Programming"
+									itemValue="C-Programming" />
+								<f:selectItem itemLabel="C Plus Plus" itemValue="C Plus Plus" />
+							</h:selectOneMenu>
+
+							<h:inputText id="search" styleClass="search" />
+							<p:watermark for="search"
+								value="Enter bookname or auther name to search"></p:watermark>
+
+							<p:commandButton id="searchButton" styleClass="button" value="Search">
+
+							</p:commandButton>
+						</h:panelGrid>
+					</h:form>
+
+				</p:layoutUnit>
+
+
+
+				<p:layoutUnit position="center">
+					<p:fieldset legend="SHOPPING CART">
+
+						<h:dataTable id="shoppingCartTable" value="#{shoppingCartController.cartList}" var="cart"
+							cellpadding="2" cellspacing="2" bgcolor="#eeaaaa" width="1024"
+							style="margin-left: 10%;">
+							<h:column>
+								<f:facet name="header">Book Name</f:facet>
+
+								<h:outputText value="#{cart.title}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Author</f:facet>
+								<h:outputText value="#{cart.author}" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">Edition</f:facet>
+								<h:outputText value="#{cart.edition}" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">Quantity</f:facet>
+								<h:outputText value="#{cart.quantity}" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">Price</f:facet>
+								<h:outputText value="#{shoppingCartController.convertToCurrency(cart.price)}" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">Discount</f:facet>
+								<h:outputText value="#{cart.discount}" />
+							</h:column>
+
+
+							<h:column>
+								<f:facet name="header">Total Price</f:facet>
+								<h:outputText value="#{shoppingCartController.convertToCurrency(cart.totalPrice)}" />
+							</h:column>
+
+						</h:dataTable>
+
+						<h:form id="checkoutForm">
+							<h:panelGrid columns="3">
+								<div id="totalPriceId" style="color: red; margin-left: 650px;">Total
+									Price:</div>
+								<h:outputText value="#{shoppingCartController.tp}"
+									rendered="true" />
+								<p:commandButton id="checkOutId" value="Check Out" action="#{userAccountController.toOrderPage}"></p:commandButton>
+							</h:panelGrid>
+						</h:form>
+
+					</p:fieldset>
+
+				</p:layoutUnit>
+
+			</p:layout>
+
+
+		</h:body>
+
+	</ui:define>
+</ui:composition>
+</html>

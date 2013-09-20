@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:outputStylesheet library = "css" name="common.css" />
+<ui:composition template="/WEB-INF/templates/headerFooterTemplate.xhtml">
+	
+	<ui:define name="content">
+	   	  
+		<section>
+			<h:head>
+				<div style = "padding-left: 80%; color: red;">
+					<b>Welcome:user</b><h:outputLink value ="#" style = "text-decoration: none;">&#160;LogOut</h:outputLink>
+				</div>
+			</h:head>
+		</section>
+		<ui:include src="/WEB-INF/templates/navigation.xhtml"></ui:include>
+		<br />
+		
+		<p:layout fullPage="false">
+		
+			<p:layoutUnit position="center" header = "User Information">
+					<h:panelGrid columns = "2">
+						<h:outputLabel value = "Full Name" />
+						<h:outputLabel value = "Nishant Shakya" />
+						
+						<h:outputLabel value = "Phone Number" />
+						<h:outputLabel value = "9841540735" />
+						
+						<h:outputLabel value = "Country" />
+						<h:outputLabel value = "Nepal" />
+						
+						<h:outputLabel value = "City" />
+						<h:outputLabel value = "Lalitpur" />
+						
+						<h:outputLabel value = "Zip Code" />
+						<h:outputLabel value = "009876" />
+					</h:panelGrid>
+			</p:layoutUnit>
+			
+			<p:layoutUnit position="east" style = "border: none;">
+			
+				<h:panelGrid columns="1">
+				
+					<h:outputLink value="#" style = "text-decoration: none; color: blue;">Edit your Details?</h:outputLink>
+					<h:outputLink value = "#" style = "text-decoration: none; color: blue;">Change your Password</h:outputLink>
+				
+				</h:panelGrid>
+		
+			</p:layoutUnit>
+			
+		</p:layout>
+	
+	
+	</ui:define>
+
+</ui:composition>
+</html>
