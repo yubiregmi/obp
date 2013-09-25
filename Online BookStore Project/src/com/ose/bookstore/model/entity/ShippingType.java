@@ -11,12 +11,17 @@ import javax.persistence.*;
 public class ShippingType implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	public enum ShipingType{
+		STANDARD, EXPRESS;
+	}
 
 
 	@Id
 	@GeneratedValue
 	private int shippingId;
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private ShipingType type;
 	private Double rate;
 
 	public int getShippingId() {
@@ -27,11 +32,11 @@ public class ShippingType implements Serializable {
 		this.shippingId = shippingId;
 	}
 
-	public String getType() {
+	public ShipingType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(ShipingType type) {
 		this.type = type;
 	}
 

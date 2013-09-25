@@ -21,11 +21,11 @@
 		<section>
 			<h:head>
 				<div style="padding-left: 80%; color: red;">
-					<h:form id="userAccountController">
+					<h:form>
 						<b>Welcome:</b>
 						<h:commandLink action="#{userAccountController.showDetails}">user</h:commandLink>
 					</h:form>
-					
+					<!-- 	<h:outputLink value ="#" style = "text-decoration: none;">&#160;LogOut</h:outputLink> -->
 				</div>
 			</h:head>
 		</section>
@@ -37,95 +37,78 @@
 		<br />
 
 		<h:body>
-			<p:layout fullPage="false">
+			<p:fieldset legend="SHOPPING CART">
 
-				<p:layoutUnit position="north" style="border: none;">
-					<h:outputText value="This is place for search options" />
+				<h:dataTable value="#{shoppingCartController.cartList}" var="cart"
+					cellpadding="2" cellspacing="2" bgcolor="#eeaaaa" width="1024"
+					style="margin-left: 10%;">
 
-					<h:form id="searchForm" styleClass="searchForm">
-						<h:panelGrid columns="5">
-							<h:outputLabel value="Search Category" />
-							<h:selectOneMenu disabled="true">
-								<f:selectItem itemLabel="All" itemValue="All" />
-								<f:selectItem itemLabel="Java" itemValue="Java" />
-								<f:selectItem itemLabel="C-Programming"
-									itemValue="C-Programming" />
-								<f:selectItem itemLabel="C Plus Plus" itemValue="C Plus Plus" />
-							</h:selectOneMenu>
+					<h:column>
+						<f:facet name="header">Book Name</f:facet>
 
-							<h:inputText id="search" styleClass="search" />
-							<p:watermark for="search"
-								value="Enter bookname or auther name to search"></p:watermark>
+						<h:outputText value="#{cart.title}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Author</f:facet>
+						<h:outputText value="#{cart.author}" />
+					</h:column>
 
-							<p:commandButton id="searchButton" styleClass="button" value="Search">
+					<h:column>
+						<f:facet name="header">Edition</f:facet>
+						<h:outputText value="#{cart.edition}" />
+					</h:column>
 
-							</p:commandButton>
-						</h:panelGrid>
-					</h:form>
+					<h:column>
+						<f:facet name="header">Quantity</f:facet>
+						<h:outputText value="#{cart.quantity}" />
+					</h:column>
 
-				</p:layoutUnit>
+					<h:column>
+						<f:facet name="header">Price</f:facet>
+						<h:outputText value="#{cart.price}">
+							<f:convertNumber currencySymbol="$" type="currency" />
+						</h:outputText>
+					</h:column>
 
-
-
-				<p:layoutUnit position="center">
-					<p:fieldset legend="SHOPPING CART">
-
-						<h:dataTable id="shoppingCartTable" value="#{shoppingCartController.cartList}" var="cart"
-							cellpadding="2" cellspacing="2" bgcolor="#eeaaaa" width="1024"
-							style="margin-left: 10%;">
-							<h:column>
-								<f:facet name="header">Book Name</f:facet>
-
-								<h:outputText value="#{cart.title}" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">Author</f:facet>
-								<h:outputText value="#{cart.author}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Edition</f:facet>
-								<h:outputText value="#{cart.edition}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Quantity</f:facet>
-								<h:outputText value="#{cart.quantity}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Price</f:facet>
-								<h:outputText value="#{shoppingCartController.convertToCurrency(cart.price)}" />
-							</h:column>
-
-							<h:column>
-								<f:facet name="header">Discount</f:facet>
-								<h:outputText value="#{cart.discount}" />
-							</h:column>
+					<h:column>
+						<f:facet name="header">Discount</f:facet>
+						<h:outputText value="#{cart.discount}" />
+					</h:column>
 
 
-							<h:column>
-								<f:facet name="header">Total Price</f:facet>
-								<h:outputText value="#{shoppingCartController.convertToCurrency(cart.totalPrice)}" />
-							</h:column>
+					<h:column>
+						<f:facet name="header">Total Price</f:facet>
+						<h:outputText value="#{cart.totalPrice}">
+							<f:convertNumber currencySymbol="$" type="currency" />
+						</h:outputText>
+					</h:column>
 
-						</h:dataTable>
 
-						<h:form id="checkoutForm">
-							<h:panelGrid columns="3">
-								<div id="totalPriceId" style="color: red; margin-left: 650px;">Total
-									Price:</div>
-								<h:outputText value="#{shoppingCartController.tp}"
-									rendered="true" />
-								<p:commandButton id="checkOutId" value="Check Out" action="#{userAccountController.toOrderPage}"></p:commandButton>
-							</h:panelGrid>
+					<h:column>
+						<f:facet name="header">Action</f:facet>
+						<h:form>
+							<h:commandLink action="#{shoppingCartController.delete(cart)}"
+								value="delete"></h:commandLink>
 						</h:form>
 
-					</p:fieldset>
+					</h:column>
 
-				</p:layoutUnit>
+				</h:dataTable>
 
-			</p:layout>
+				<h:form>
+					<h:panelGrid columns="3">
+						<div id="totalPriceId" style="color: red; margin-left: 650px;">Total
+							Price:</div>
+						<h:outputText value="#{shoppingCartController.tp}" rendered="true">
+							<f:convertNumber currencySymbol="$" type="currency" />
+						</h:outputText>
+						<p:commandButton id="checkOutId" value="Check Out"
+							action="#{userAccountController.toOrderPage}"></p:commandButton>
+					</h:panelGrid>
+				</h:form>
+
+			</p:fieldset>
+
 
 
 		</h:body>

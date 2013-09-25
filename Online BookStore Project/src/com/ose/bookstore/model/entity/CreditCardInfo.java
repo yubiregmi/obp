@@ -13,53 +13,70 @@ public class CreditCardInfo implements Serializable {
 
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	public enum CreditCardType {
+		VISA, MASTER_CARD, AMERICAN_EXPRESS;
+	}
 
 	@Id
 	@GeneratedValue
-	private int ccId;
-	private String type;
-	private String fname;
-	private String mname;
-	private String lname;
+	private int cardId;
+	
+	@Enumerated(EnumType.STRING)
+	private CreditCardType creditCardType;
+	@Column(length = 30)
+	private String firstName;
+	@Column(length = 30)
+	private String middleName;
+	@Column(length = 30)
+	private String lastName;
+	@Column(length = 12)
 	private String expirationDate;
+	@Column(length = 10)
 	private String buildingNo;
+	@Column(length = 10)
 	private String streetNo;
+	@Column(length = 50)
 	private String streetName;
+	@Column(length = 50)
 	private String city;
+	@Column(length = 10)
 	private String zip;
+	@Column(length = 30)
 	private String state;
+	@Column(length = 40)
 	private String country;
 
-	public int getCcId() {
-		return ccId;
+	public int getCardId() {
+		return cardId;
 	}
-	public void setCcId(int ccId) {
-		this.ccId = ccId;
+	public void setCardId(int cardId) {
+		this.cardId = cardId;
 	}
-	public String getType() {
-		return type;
+	
+	public CreditCardType getCreditCardType() {
+		return creditCardType;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setCreditCardType(CreditCardType creditCardType) {
+		this.creditCardType = creditCardType;
 	}
-	public String getFname() {
-		return fname;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setFname(String fname) {
-		this.fname = fname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public String getMname() {
-		return mname;
+	public String getMiddleName() {
+		return middleName;
 	}
-	public void setMname(String mname) {
-		this.mname = mname;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
-	public String getLname() {
-		return lname;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setLname(String lname) {
-		this.lname = lname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	public String getExpirationDate() {
 		return expirationDate;

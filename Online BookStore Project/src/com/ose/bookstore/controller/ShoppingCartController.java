@@ -14,15 +14,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 
+import com.ose.bookstore.helper.Cart;
 import com.ose.bookstore.model.ejb.BookListDao;
 import com.ose.bookstore.model.ejb.ShoppingCartDao;
 import com.ose.bookstore.model.entity.Books;
 import com.ose.bookstore.model.entity.ShoppingCart;
-import com.ose.bookstore.model.helper.Cart;
 
 /**
- * @author nishant
+ * Deals with all the page links dispatches present in orderBooks page
  * 
+ * @author OSE Nepal
+ * @version 1.0 18 Sept 2013
  */
 @Named
 @RequestScoped
@@ -41,50 +43,41 @@ public class ShoppingCartController implements Serializable {
 
 	@Inject
 	ShoppingCart shoppingCart;
-	@NotNull(message = "Select the shipping type")
-	private int shippingType;
-	// @Inject
-	Cart scart;
-	// Books book;
-	// UserDetails userDetails
 
-	// Double[] tpwithoutTaxShip;
-	double tp;
+	@NotNull(message = "Select the shipping type")
+	String shippingType;// Selected shipping type(Standard or Express); atleast
+						// one must be selected
+
+	Cart scart;// Optimised & joint fields required for displaying in the
+				// shopping cart page
+
+	double tp;// Total price of the cart without shipping costs and taxes
+
+	int bookQuantity;
+
 	List<Cart> cartList;
 
-	//
-	// public String showQuant(){
-	// System.out.println("Books Quantity: " + shoppingCart.getBookQuantity());
-	// return "home";
-	// }
-	// public void addToShoppingCart() {
-	// System.out.println("Books Quantity: " + shoppingCart.getBookQuantity());
-	// System.out.println("Shopping Book Id: " + shoppingCart.getBookId());
-	// // ShoppingCart sc = new ShoppingCart();
-	// // sc.setBookId(book.getBookId());
-	// // sc.setBookQuantity(shoppingCart.getBookQuantity());
-	// // System.out.println("From ShoppingCartController: "
-	// // + shoppingCart.getBookQuantity());
-	// // System.out.println("From sc: " + sc.getBookQuantity());
-	// // shoppingCartDao.add(shoppingCart);
-	//
-	// }
+	private double totalIncTax;
 
+	private double totalWithShipping;
+
+	/**
+	 * The list containing the cart fields
+	 * 
+	 * @return cartList The shopping cart list
+	 */
 	public List<Cart> cartList() {
-		System.out.println("button clicked:");
 		List<ShoppingCart> cart = shoppingCartDao.getCart(0);
-		System.out.println("List: " + cart);
-		// List<Books> books = bookListDao.getBookList();
-
 		Books book = new Books();
 		List<Cart> cartList = new ArrayList<Cart>();
 		tp = 0.0;
+		bookQuantity = 0;
 		for (int i = 0; i < cart.size(); i++) {
 			book = bookListDao.getBook(cart.get(i).getBookId());
-			System.out.println(book.getBookId());
 			tp += ((book.getPrice() - (book.getPrice() * book.getDiscount())) * cart
 					.get(i).getBookQuantity());
-			Cart cart1 = new Cart(book.getBookId(),
+			Cart cart1 = new Cart(
+					book.getBookId(),
 					book.getAuthor(),
 					book.getTitle(),
 					book.getEdition(),
@@ -92,40 +85,38 @@ public class ShoppingCartController implements Serializable {
 					book.getDiscount(),
 					cart.get(i).getBookQuantity(),
 					((book.getPrice() - (book.getPrice() * book.getDiscount())) * cart
-							.get(i).getBookQuantity()), book.getCoverPage());
-			// tpwithoutTaxShip[i] = tp;
-			System.out.println(book);
+							.get(i).getBookQuantity()), book.getCoverPage(),cart.get(i).getScId());
 			cartList.add(cart1);
-			System.out.println("From instance: " + cart1.getBookId());
-			// totalwoTaxShipp = tp;
+			bookQuantity += cart.get(i).getBookQuantity();
 		}
-
-		// for (int j = 0; j < books.size(); j++) {
-		// // System.out.println("BOok size: " + cart.size());
-		// if (cart.get(i).getBookId() == books.get(j).getBookId()) {
-		// System.out.println("bookid from shopping cart table:" +
-		// cart.get(i).getBookId());
-		// System.out.println("bookid from book table: " +
-		// books.get(j).getBookId());
-		// scart.setAuthor(books.get(j).getAuthor());
-		// scart.setTitle(books.get(j).getTitle());
-		// scart.setEdition(books.get(j).getEdition());
-		// scart.setPrice(books.get(j).getPrice());
-		// scart.setDiscount(books.get(j).getDiscount());
-		// scart.setQuantity(cart.get(i).getBookQuantity());
-		// scart.setTotalPrice((books.get(j).getPrice()-(books.get(j).getPrice())*(books.get(j).getDiscount()))*cart.get(i).getBookQuantity());
-		// cartList.add(scart);
-		// System.out.println("current cart: " + scart);
-		// // System.out.println("BOok size: " + books.size());
-		// // scart = null;
-		// }
-		// System.out.println("Cart List: " + scart);
-
+		System.out.println(bookQuantity);
 		System.out.println("Cart List: " + cartList);
-
 		return cartList;
 	}
 
+//	/**
+//	 * Converts the price to currency Format
+//	 * 
+//	 * @param price
+//	 *            in double format
+//	 * @return currency in currency format
+//	 */
+//	public String convertToCurrency(double price) {
+//		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+//		System.out.println(currencyFormatter.format(price));
+//		return currencyFormatter.format(price);
+//	}
+
+	public void delete(Cart cart) {
+		ShoppingCart sc = new ShoppingCart();
+		sc.setBookId(cart.getBookId());
+		sc.setBookQuantity(cart.getQuantity());
+		sc.setUserId(0);
+		sc.setScId(cart.getCartId());
+		shoppingCartDao.deleteEntry(sc);
+	}
+
+//	Login l;
 	public ShoppingCart getShoppingCart() {
 		return shoppingCart;
 	}
@@ -133,35 +124,6 @@ public class ShoppingCartController implements Serializable {
 	public void setShoppingCart(ShoppingCart shoppingCart) {
 		this.shoppingCart = shoppingCart;
 	}
-
-	// public void addToShoppingCart() {
-	// // Books book = getCurrentBook();
-	// System.out.println("Books Quantity: " + shoppingCart.getBookQuantity());
-	// // System.out.println("Book Id: " + book.getBookId());
-	// System.out.println("Shopping Book Id: " + shoppingCart.getBookId());
-	// // ShoppingCart sc = new ShoppingCart();
-	// // sc.setBookId(book.getBookId());
-	// // sc.setBookQuantity(shoppingCart.getBookQuantity());
-	// // System.out.println("From ShoppingCartController: "
-	// // + shoppingCart.getBookQuantity());
-	// // System.out.println("From sc: " + sc.getBookQuantity());
-	// // shoppingCartDao.add(shoppingCart);
-	//
-	// }
-
-	// private static Map<Integer, Object> bookNumber;
-	//
-	// static {
-	// bookNumber = new LinkedHashMap<Integer, Object>();
-	// // bookNo.put(1,1);
-	// for (int i = 1; i <= 10; i++)
-	// bookNumber.put(i, i);
-	//
-	// }
-	//
-	// public Map<Integer, Object> getBookNo() {
-	// return bookNumber;
-	// }
 
 	public List<Cart> getCartList() {
 		return cartList();
@@ -171,75 +133,106 @@ public class ShoppingCartController implements Serializable {
 		this.cartList = cartList();
 	}
 
-	//
-	// public Double getTpwithoutTaxShip() {
-	// return tpwithoutTaxShip;
-	// }
-	//
-	// public void setTpwithoutTaxShip(Double tpwithoutTaxShip) {
-	// this.tpwithoutTaxShip = tpwithoutTaxShip;
-	// }
-
-	public String getTp() {
+	public double getTp() {
 		List<ShoppingCart> cart = shoppingCartDao.getCart(0);
 		Books book = new Books();
-		// List<Cart> cartList = new ArrayList<Cart>();
 		tp = 0.0;
 		for (int i = 0; i < cart.size(); i++) {
 			book = bookListDao.getBook(cart.get(i).getBookId());
-
 			tp += ((book.getPrice() - (book.getPrice() * book.getDiscount())) * cart
 					.get(i).getBookQuantity());
 		}
-		return convertToCurrency(tp);
+		return tp;
 	}
 
 	public void setTp(double tp) {
 		this.tp = tp;
 	}
 
-	public int getShippingType() {
+	public String getShippingType() {
 		return shippingType;
 	}
 
-	public void setShippingType(int shippingType) {
+	public void setShippingType(String shippingType) {
 		this.shippingType = shippingType;
-//		newTotal = (float) (tp+tax);
-		
 		System.out.println(shippingType);
-//		this.shippingType = shippingType;
 	}
-	
 
-	public String convertToCurrency(double price){
-//		System.out.println(totalIncTax);
+	/**
+	 * Add the shipping costs and Taxes
+	 * 
+	 * @return the total price costs in string format
+	 */
+	public double getTotalIncTax() {
+
 		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-//		double price = 2.50000000000003;
-		System.out.println(currencyFormatter.format(price));
-		return currencyFormatter.format(price);
-	}
-	
-	public String getTotalIncTax() {
-//		System.out.println(totalIncTax);
-		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-//		double price = 2.50000000000003;
-//		System.out.println(currencyFormatter.format(price));
-		
-		double totalExTax = tp + shippingType;
-		System.out.println(totalExTax);
-		totalIncTax = totalExTax + totalExTax*.15;
-//		convertToCurrency(totalIncTax);
+		// double totalExTax = tp;
+		// System.out.println(totalExTax);
+		totalIncTax = tp + tp * .035;
 		System.out.println(currencyFormatter.format(totalIncTax));
-//		this.newTotal = newTotal;
-		return convertToCurrency(totalIncTax);
-		
+		return totalIncTax;
+
 	}
+
 	public void setTotalIncTax(double totalIncTax) {
-		
+
 		this.totalIncTax = totalIncTax;
 		System.out.println(totalIncTax);
 	}
 
-	private double totalIncTax;
-//	private float shippingCost;
+	public double getTotalWithShipping() {
+		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+//		double totalExTax = tp;
+//		System.out.println(totalExTax);
+		totalWithShipping = tp + tp * .035;
+		if (shippingType == null){
+			shippingType = "Standard";
+		}
+		System.out.println("Excluding shipping: " + totalWithShipping);
+//		System.out.println(currencyFormatter.format(totalWithShipping));
+//		return convertToCurrency(totalWithShipping);
+//		NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+//		System.out.println(tp);
+//		totalWithShipping = tp;
+////		sysout
+//////	    tp = tp + tp * .035;
+//////		totalIncTax = tp + tp * .035;
+//		System.out.println("Total Books: " + bookQuantity);
+		if (bookQuantity <= 3) {
+			totalWithShipping = totalWithShipping + 7.5; //If less than 3 books, standard shipping
+			System.out.println("Including Shipping: " + totalWithShipping);
+			System.out.println(shippingType);
+			
+//			System.out.println(shippingType.length());
+//			if (shippingType.length() > 0) {
+			if (shippingType.equals("Express")) {
+				totalWithShipping = totalWithShipping + totalWithShipping * 0.3;//Express shipping, costs 30% more than standard shipping
+			}
+		}
+		else {
+			totalWithShipping = totalWithShipping + 9.5; //if 4 or more books, standard shipping
+			System.out.println("Including Shipping: " + totalWithShipping);
+			if (shippingType.equals("Express")) {
+				totalWithShipping = totalWithShipping + totalWithShipping * 0.3;
+				System.out.println("Excluding Tax: + shipping cost "
+						+ totalWithShipping);
+			}
+			// totalIncTax = totalExTax + totalExTax * .15;
+		}
+//		totalIncTax = tp;
+		// double totalExTax = tp + shippingType;
+		System.out.println(totalWithShipping);
+//		totalIncTax = totalExTax + totalExTax * .035;
+		System.out.println(shippingType);
+		System.out.println(currencyFormatter.format(totalWithShipping));
+		return totalWithShipping;
+////		return totalWithShipping;
+		
+	}
+
+	public void setTotalWithShipping(double totalWithShipping) {
+		this.totalWithShipping = totalWithShipping;
+		System.out.println(totalWithShipping);
+	}
+
 }

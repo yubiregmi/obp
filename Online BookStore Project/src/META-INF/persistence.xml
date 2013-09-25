@@ -10,6 +10,7 @@
 		<class>com.ose.bookstore.model.entity.ShippingType</class>
 		<class>com.ose.bookstore.model.entity.ShoppingCart</class>
 		<class>com.ose.bookstore.model.entity.UserDetails</class>
+		<class>com.ose.bookstore.model.entity.Ratings</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="create-tables"/>
 		</properties>

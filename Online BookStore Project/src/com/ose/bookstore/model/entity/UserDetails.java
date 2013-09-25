@@ -2,6 +2,7 @@ package com.ose.bookstore.model.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,16 +19,27 @@ public class UserDetails implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 
-	private String fname;
-	private String mname;
-	private String lname;
+	@Column(length = 30)
+	private String firstName;
+	@Column(length = 30)
+	private String middleName;
+	@Column(length = 30)
+	private String lastName;
+	@Column(length = 20)
 	private String phone;
+	@Column(length = 10)
 	private String buildingNo;
+	@Column(length = 10)
 	private String streetNo;
+	@Column(length = 50)
 	private String streetName;
+	@Column(length = 50)
 	private String city;
+	@Column(length = 10)
 	private String zip;
+	@Column(length = 30)
 	private String state;
+	@Column(length = 40)
 	private String country;
 	@Id
 	@GeneratedValue
@@ -35,23 +47,23 @@ public class UserDetails implements Serializable {
 	private int loginId;
 	private String date;
 
-	public String getFname() {
-		return fname;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setFname(String fname) {
-		this.fname = fname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public String getMname() {
-		return mname;
+	public String getMiddleName() {
+		return middleName;
 	}
-	public void setMname(String mname) {
-		this.mname = mname;
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
 	}
-	public String getLname() {
-		return lname;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setLname(String lname) {
-		this.lname = lname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	public String getPhone() {
 		return phone;

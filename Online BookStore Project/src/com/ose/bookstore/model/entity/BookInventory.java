@@ -14,16 +14,16 @@ public class BookInventory implements Serializable {
 
 	@Id
 	@GeneratedValue
-	private int biId;
+	private int inventoryId;
 	private int bookId;
 	private int booksInStock;
 
-	public int getBiId() {
-		return biId;
+	public int getInventoryId() {
+		return inventoryId;
 	}
 
-	public void setBiId(int biId) {
-		this.biId = biId;
+	public void setInventoryId(int inventoryId) {
+		this.inventoryId = inventoryId;
 	}
 
 	public int getBookId() {

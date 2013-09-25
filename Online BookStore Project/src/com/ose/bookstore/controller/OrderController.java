@@ -14,15 +14,18 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.ose.bookstore.helper.Cart;
 import com.ose.bookstore.model.ejb.OrderDao;
+import com.ose.bookstore.model.ejb.UserAccountDao;
 import com.ose.bookstore.model.entity.OrderDetail;
 import com.ose.bookstore.model.entity.ShippingType;
 import com.ose.bookstore.model.entity.UserDetails;
-import com.ose.bookstore.model.helper.Cart;
 
 /**
- * @author nishant
+ * Deals with all the page links dispatches present in orderBooks page
  * 
+ * @author OSE Nepal
+ * @version 1.0 18 Sept 2013
  */
 @Named
 @RequestScoped
@@ -33,83 +36,46 @@ public class OrderController implements Serializable {
 	 */
 	@EJB
 	OrderDao orderDao;
-//	 @Inject
-	 UserDetails currentUser;
-	 ShippingType currentShipping;
-	 Cart currentCart;
-	 @Inject
-	 OrderDetail order;
-	 
+	
+	@EJB
+	UserAccountDao userAccountDao;
+	
+	UserDetails currentUser;
+	
+	ShippingType currentShipping;
+	
+	Cart currentCart;
+	
+	@Inject
+	OrderDetail order;
+
 	private static final long serialVersionUID = 1L;
-//	String shippingType;
-////	static ShoppingCartController uc;
-//	public String getShippingType() {
-//		return shippingType;
-//	}
-//
-//	public void setShippingType(String shippingType) {
-//		this.shippingType = shippingType;
-//	}
 
-	String firstName;
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-//	public String action() {
-//		System.out.println("from jsf: " + shippingType);
-//		System.out.println("firstName: " + userDetails.getFname());
-//		System.out.println(userDetails);
-////		System.out.println(uc.cartList());
-//		return "test";
-//		// return "home";
-//		// System.out.println("propertyName2: " + propertyName2);
-//	}
-	public String action(UserDetails userDetails, int shippingType, List<Cart> cartList) {
+	/**Sets the order object to store in the database later
+	 * @param userDetails current user details from the orderbooks page
+	 * @param shippingType current shipping type from the orderbooks page
+	 * @param cartList current cart list of the user from the orderbooks page
+	 * @return
+	 */
+	public String action(UserDetails userDetails, String shippingType,	List<Cart> cartList) {
 		this.currentUser = userDetails;
-//		this.currentShipping = shippingType;
-//		this.currentCart =
-//		System.out.println("from jsf: " + shippingType);
-		System.out.println("firstName: " + userDetails.getFname());
-		System.out.println("Current User: " + currentUser.getFname());
-		System.out.println("Shipping type: " + shippingType);
-		System.out.println(cartList);
+		userAccountDao.editUser(userDetails);
 		for (int i = 0; i < cartList.size(); i++) {
 			order.setShippingId(i);
-			 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//		        Date date = new Date();
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			Date d1 = new Date();
-//			SimpleDateFormat df = new SimpleDateFormat('MM/dd/YYYY HH:mm AM');
-			String formattedDate = dateFormat.format(d1);
-			order.setDate(formattedDate);
+//			String formattedDate = dateFormat.format(d1);
+			order.setDate(d1);
 			order.setBookId(cartList.get(i).getBookId());
 			order.setUserId(userDetails.getUserId());
 			order.setStatus(i);
 			orderDao.create(order);
-//			order.setBookId(bookId);
-//			System.out.println(cartList.get(i).getBookId());
-//			System.out.println(cartList.get(i).getAuthor());
-			
-		}
-//		System.out.println(userDetails);
-//		System.out.println(uc.cartList());
-		return "test";
-		// return "home";
-		// System.out.println("propertyName2: " + propertyName2);
-	}
-//	public static void main(String[] args) {
-//		FacesContext context = FacesContext.getCurrentInstance();
-//		UserDetails userDetails = (UserDetails) context.getApplication()
-//				.evaluateExpressionGet(context, "#{userDetails}",
-//						UserDetails.class);
-//		System.out.println(userDetails);
-//	}
 
+		}
+		return "creditCard";
+	}
+
+	//Getters and Setters
 	public UserDetails getCurrentUser() {
 		return currentUser;
 	}
@@ -141,6 +107,5 @@ public class OrderController implements Serializable {
 	public void setOrder(OrderDetail order) {
 		this.order = order;
 	}
-
 
 }

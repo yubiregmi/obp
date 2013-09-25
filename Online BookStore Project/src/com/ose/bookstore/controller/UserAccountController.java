@@ -9,11 +9,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.ose.bookstore.model.ejb.UserAccountDao;
+//import com.ose.bookstore.model.entity.Address;
 import com.ose.bookstore.model.entity.UserDetails;
 
 /**
- * @author nishant
- *
+ * Deals with all the page links dispatches present in editDetails page and the
+ * pages involving with userDetails data
+ * 
+ * @author OSE Nepal
+ * @version 1.0 18 Sept 2013
  */
 @Named
 @RequestScoped
@@ -21,10 +25,40 @@ public class UserAccountController {
 
 	@EJB
 	UserAccountDao userAccountDao;
-	
+
 	@Inject
 	UserDetails userDetails;
+	
+	//@Inject
+	//Address address;
 
+	/**The selected user's detail is edited
+	 * @return null returns to same page
+	 */
+	public String editDetails() {
+		userAccountDao.editUser(userDetails);
+		return "null";
+	}
+
+	/**The cart is loaded to the order table
+	 * @return forwards to orderBooks page
+	 */
+	public String toOrderPage() {
+		this.userDetails = userAccountDao.getUser(1);
+		return "orderBooks";
+	}
+
+	/**Retrieves the user's details from the database
+	 * @return forwards to editDetails page
+	 */
+	public String showDetails() {
+//		System.out.println("ok");
+		this.userDetails = userAccountDao.getUser(1);
+//		System.out.println("error");
+		return "editDetails";
+	}
+	
+	//Getters and Setters
 	public UserDetails getUserDetails() {
 		return userDetails;
 	}
@@ -32,28 +66,14 @@ public class UserAccountController {
 	public void setUserDetails(UserDetails userDetails) {
 		this.userDetails = userDetails;
 	}
-	
-	public String editDetails(){
-//		List<UserDetails> user = userAccountDao.display();
-//		this.userDetails = userAccountDao.getUser(1);
-		System.out.println("UserId:" + userDetails.getUserId());
-		System.out.println("Fname: " + userDetails.getFname());
-		System.out.println("Mname: " + userDetails.getMname());
-		userAccountDao.editUser(userDetails);
-		return "null";
-	}
-	
-	public String toOrderPage(){
-		this.userDetails = userAccountDao.getUser(1);
-		System.out.println("First Name : " + this.userDetails.getFname());
-		return "orderBooks";
-	}
-	
-	public String showDetails(){
-		System.out.println("Hello : sadfsdaF");
-		this.userDetails = userAccountDao.getUser(1);
-		System.out.println("First Name : " + this.userDetails.getFname());
-		return "editDetails";
-	}
-	
+
+//	public Address getAddress() {
+//		return address;
+//	}
+//
+//	public void setAddress(Address address) {
+//		this.address = address;
+//	}
+
+
 }
